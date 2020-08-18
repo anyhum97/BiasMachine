@@ -10,7 +10,7 @@ namespace BiasMachine
 		////////////////////////////////////////////////////////////////////////
 
 		private const int Input = 2;
-		private const int Output = 2;
+		private const int Output = 1;
 
 		////////////////////////////////////////////////////////////////////////
 
@@ -18,12 +18,32 @@ namespace BiasMachine
 		
 		////////////////////////////////////////////////////////////////////////
 
+		private static BiasMachine GetBiasMachine()
+		{
+			return new BiasMachine(Input, 2, Output);
+		}
+
 		private static double[] GetInput()
 		{
 			double[] input = new double[Input];
 
-			input[0] = FixedRandom.NextDouble();
-			input[1] = FixedRandom.NextDouble();
+			if(FixedRandom.GetBool())
+			{
+				input[0] = 1.0;
+			}
+			else
+			{
+				input[0] = 0.0;
+			}
+
+			if(FixedRandom.GetBool())
+			{
+				input[1] = 1.0;
+			}
+			else
+			{
+				input[1] = 0.0;
+			}
 
 			return input;
 		}
@@ -34,8 +54,10 @@ namespace BiasMachine
 		{
 			double[] output = new double[Output];
 
-			output[0] = input[0] + input[1];
-			output[1] = input[0];
+			if(input[0] == 1.0 && input[1] == 1.0)
+			{
+				output[0] = 1.0;
+			}
 
 			return output;
 		}
@@ -75,7 +97,7 @@ namespace BiasMachine
 				{
 					stringBuilder.Append(Float3(output[j]));
 
-					if(j < Input-1)
+					if(j < Output-1)
 					{
 						stringBuilder.Append(", ");
 					}
@@ -87,7 +109,7 @@ namespace BiasMachine
 				{
 					stringBuilder.Append(Float3(solution[j]));
 
-					if(j < Input-1)
+					if(j < Output-1)
 					{
 						stringBuilder.Append(", ");
 					}
@@ -105,10 +127,10 @@ namespace BiasMachine
 					}
 					else
 					{
-						stringBuilder.Append("X");
+						stringBuilder.Append("X.XXX %");
 					}
 					
-					if(j < Input-1)
+					if(j < Output-1)
 					{
 						stringBuilder.Append(", ");
 					}
@@ -123,7 +145,7 @@ namespace BiasMachine
 			{
 				stringBuilder.Append(Float3(100.0*average[j]/count) + " %");
 
-				if(j < Input-1)
+				if(j < Output-1)
 				{
 					stringBuilder.Append(", ");
 				}
@@ -150,7 +172,7 @@ namespace BiasMachine
 			
 			for(int j=0; j<count; ++j)
 			{
-				population[j] = new BiasMachine(Input, Output);
+				population[j] = GetBiasMachine();
 			}
 			
 			for(int i=0; i<iteration; ++i)
@@ -195,8 +217,7 @@ namespace BiasMachine
 					}					
 					else
 					{
-						population[j] = successful[FixedRandom.Next(best)].Clone();
-						
+						population[j] = successful[FixedRandom.Next(best)].Clone();						
 						population[j].Mutation();
 					}
 				}
@@ -219,7 +240,7 @@ namespace BiasMachine
 			
 			for(int j=0; j<count; ++j)
 			{
-				population[j] = new BiasMachine(Input, Output);
+				population[j] = GetBiasMachine();
 			}
 			
 			for(int i=0; i<iteration; ++i)
@@ -267,22 +288,13 @@ namespace BiasMachine
 						int parent1 = FixedRandom.Next(best);
 						int parent2 = FixedRandom.Next(best);
 
-						population[j] = successful[parent1].Pairing(successful[parent2]);
-						
+						population[j] = successful[parent1].Pairing(successful[parent2]);						
 						population[j].Mutation();
 					}
 				}
 			}
 			
 			Test(successful[0]);
-		}
-
-		////////////////////////////////////////////////////////////////////////
-
-		private static void Main()
-		{
-			StartSelection();
-			StartPairing();
 		}
 
 		////////////////////////////////////////////////////////////////////////
@@ -294,9 +306,12 @@ namespace BiasMachine
 
 		////////////////////////////////////////////////////////////////////////
 
-		private static string Float3(float value)
+		private static void Main()
 		{
-			return string.Format(CultureInfo.InvariantCulture, "{0:F3}", value);
+			StartSelection();
+			StartPairing();
 		}
+
+		////////////////////////////////////////////////////////////////////////
 	}
 }
