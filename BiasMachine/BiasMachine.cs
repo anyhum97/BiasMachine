@@ -74,7 +74,7 @@ namespace BiasMachine
 
 				for(int j=0; j<width; ++j)
 				{
-					int random1 = FixedRandom.Next(3);
+					int random1 = FixedRandom.Next(2);
 
 					Param param1 = pair.Weights[i][j];
 					Param param2 = this.Weights[i][j];
