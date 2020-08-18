@@ -10,7 +10,7 @@ namespace BiasMachine
 		////////////////////////////////////////////////////////////////////////
 
 		private const int Input = 1;
-		private const int Output = 1;
+		private const int Output = 2;
 
 		////////////////////////////////////////////////////////////////////////
 
@@ -20,7 +20,12 @@ namespace BiasMachine
 
 		private static BiasMachine GetBiasMachine()
 		{
-			return new BiasMachine(Input, 5, Output);
+			BiasMachine machine = new BiasMachine(Input, 4, 6, Output);
+
+			machine.SetActivationFunction(2, 1, new Sigmoid());
+			machine.SetActivationFunction(2, 2, new Sigmoid());
+
+			return machine;
 		}
 
 		////////////////////////////////////////////////////////////////////////
@@ -41,6 +46,7 @@ namespace BiasMachine
 			double[] output = new double[Output];
 
 			output[0] = Math.Sin(input[0]);
+			output[1] = Math.Cos(input[0]);
 
 			return output;
 		}
