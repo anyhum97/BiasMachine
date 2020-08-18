@@ -9,7 +9,7 @@ namespace BiasMachine
 	{
 		////////////////////////////////////////////////////////////////////////
 
-		private const int Input = 2;
+		private const int Input = 1;
 		private const int Output = 1;
 
 		////////////////////////////////////////////////////////////////////////
@@ -20,30 +20,16 @@ namespace BiasMachine
 
 		private static BiasMachine GetBiasMachine()
 		{
-			return new BiasMachine(Input, 2, Output);
+			return new BiasMachine(Input, 5, Output);
 		}
+
+		////////////////////////////////////////////////////////////////////////
 
 		private static double[] GetInput()
 		{
 			double[] input = new double[Input];
 
-			if(FixedRandom.GetBool())
-			{
-				input[0] = 1.0;
-			}
-			else
-			{
-				input[0] = 0.0;
-			}
-
-			if(FixedRandom.GetBool())
-			{
-				input[1] = 1.0;
-			}
-			else
-			{
-				input[1] = 0.0;
-			}
+			input[0] = FixedRandom.NextDouble();
 
 			return input;
 		}
@@ -54,10 +40,7 @@ namespace BiasMachine
 		{
 			double[] output = new double[Output];
 
-			if(input[0] == 1.0 && input[1] == 1.0)
-			{
-				output[0] = 1.0;
-			}
+			output[0] = Math.Sin(input[0]);
 
 			return output;
 		}
