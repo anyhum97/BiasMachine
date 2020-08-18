@@ -12,6 +12,7 @@ namespace BiasMachine
 	public class LeakyReLU : IActivation
 	{
 		public Param Factor { get; protected set; }
+
 		public Param Leak { get; protected set; }
 
 		public LeakyReLU()
@@ -24,6 +25,12 @@ namespace BiasMachine
 		{
 			Factor = new Param(factor);
 			Leak = new Param(leak);
+		}
+
+		public LeakyReLU(Param factor, Param leak)
+		{
+			Factor = factor.Clone();
+			Leak = leak.Clone();
 		}
 
 		public double Compute(double value)
@@ -62,16 +69,28 @@ namespace BiasMachine
 			Amplitude = new Param(1.0);
 		}
 
-		public SingleStep(double value)
+		public SingleStep(double threshold)
 		{
-			Threshold = new Param(value);
+			Threshold = new Param(threshold);
 			Amplitude = new Param(1.0);
 		}
 
-		public SingleStep(double value, double amplitude)
+		public SingleStep(double threshold, double amplitude)
 		{
-			Threshold = new Param(value);
+			Threshold = new Param(threshold);
 			Amplitude = new Param(amplitude);
+		}
+
+		public SingleStep(Param value)
+		{
+			Threshold = value.Clone();
+			Amplitude = new Param(1.0);
+		}
+
+		public SingleStep(Param threshold, Param amplitude)
+		{
+			Threshold = threshold.Clone();
+			Amplitude = amplitude.Clone();
 		}
 
 		public double Compute(double value)
@@ -107,9 +126,14 @@ namespace BiasMachine
 			Factor = new Param(0.7);
 		}
 
-		public Elu(double value)
+		public Elu(double factor)
 		{
-			Factor = new Param(value);
+			Factor = new Param(factor);
+		}
+
+		public Elu(Param factor)
+		{
+			Factor = factor.Clone();
 		}
 
 		public double Compute(double value)
@@ -144,9 +168,14 @@ namespace BiasMachine
 			Factor = new Param(4.0);
 		}
 
-		public Sigmoid(double value)
+		public Sigmoid(double factor)
 		{
-			Factor = new Param(value);
+			Factor = new Param(factor);
+		}
+
+		public Sigmoid(Param factor)
+		{
+			Factor = factor.Clone();
 		}
 
 		public double Compute(double value)
@@ -190,6 +219,23 @@ namespace BiasMachine
 
 	public class Gaussian : IActivation
 	{
+		public Param Factor { get; protected set; }
+
+		public Gaussian()
+		{
+			Factor = new Param(1.0);
+		}
+
+		public Gaussian(double factor)
+		{
+			Factor = new Param(factor);
+		}
+
+		public Gaussian(Param factor)
+		{
+			Factor = factor.Clone();
+		}
+
 		public double Compute(double value)
 		{
 			return Math.Exp(-value*value);
@@ -197,12 +243,12 @@ namespace BiasMachine
 
 		public IActivation Clone()
 		{
-			return new Gaussian();
+			return new Gaussian(Factor);
 		}
 
 		public void Mutation()
 		{
-			
+			Factor.Mutation();
 		}
 	}
 
