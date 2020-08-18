@@ -30,6 +30,10 @@ namespace BiasMachine
 
 		////////////////////////////////////////////////////////////////////////
 
+		public bool ChangeActivationFunctionEnabled { get; set; } = true;
+
+		////////////////////////////////////////////////////////////////////////
+
 		public BiasMachine(params int[] wide)
 		{
 			BuildMachine(wide);
@@ -257,9 +261,37 @@ namespace BiasMachine
 			{
 				for(int j=0; j<Wide[i+1]; ++j)
 				{
-					Activation[i][j].Mutation();
+					if(FixedRandom.NextDouble() <= 0.01)
+					{
+						if(ChangeActivationFunctionEnabled)
+						{
+							Activation[i][j] = ChangeActivationFunction();
+						}
+					}
+
+					Activation[i][j].Mutation();					
 				}
 			}
+		}
+
+		////////////////////////////////////////////////////////////////////////
+
+		IActivation ChangeActivationFunction()
+		{
+			int random = FixedRandom.Next(7);			
+
+			switch(random)
+			{
+				case 0: return new LeakyReLU();
+				case 1: return new SingleStep();
+				case 2: return new Elu();
+				case 3: return new Sigmoid();
+				case 4: return new Sinc();
+				case 5: return new Gaussian();
+				case 6: return new Softsign();
+			}
+
+			return new LeakyReLU();
 		}
 
 		////////////////////////////////////////////////////////////////////////
