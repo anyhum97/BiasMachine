@@ -10,7 +10,7 @@ namespace BiasMachine
 		////////////////////////////////////////////////////////////////////////
 
 		private const int Input = 1;
-		private const int Output = 2;
+		private const int Output = 1;
 
 		////////////////////////////////////////////////////////////////////////
 
@@ -20,12 +20,7 @@ namespace BiasMachine
 
 		private static BiasMachine GetBiasMachine()
 		{
-			BiasMachine machine = new BiasMachine(Input, 4, 6, Output);
-
-			machine.SetActivationFunction(2, 1, new Sigmoid());
-			machine.SetActivationFunction(2, 2, new Sigmoid());
-
-			return machine;
+			return new BiasMachine(Input, 6, 4, Output);
 		}
 
 		////////////////////////////////////////////////////////////////////////
@@ -45,8 +40,7 @@ namespace BiasMachine
 		{
 			double[] output = new double[Output];
 
-			output[0] = Math.Sin(input[0]);
-			output[1] = Math.Cos(input[0]);
+			output[0] = input[0]*Math.Sin(input[0]);
 
 			return output;
 		}
@@ -57,9 +51,11 @@ namespace BiasMachine
 		{
 			const int count = 16;
 
-			double[] average = new double[Output];
+			double[] average = new double[Output];			
+
+			StringBuilder stringBuilder = new StringBuilder();
 			
-			StringBuilder stringBuilder = new StringBuilder();	
+			double absolute = 0.0;
 
 			for(int i=0; i<count; ++i)
 			{
@@ -108,7 +104,9 @@ namespace BiasMachine
 
 				for(int j=0; j<Output; ++j)
 				{
-					if(output[j] != 0.0)
+					absolute += Math.Abs(output[j]-solution[j]);
+
+					if(output[j] > 0.001)
 					{
 						double error = Math.Abs((output[j]-solution[j])/output[j]);
 						stringBuilder.Append(Float3(100.0*error) + " %");
@@ -140,10 +138,14 @@ namespace BiasMachine
 				}
 			}
 
+			stringBuilder.Append(") || (");
+
+			stringBuilder.Append(Float3(100.0*absolute/(count*Output)));
+
 			stringBuilder.Append(")\n\n");
 
 			Console.Write(stringBuilder.ToString());
-			Console.ReadKey();
+			
 			Best = best;
 		}
 
@@ -188,7 +190,7 @@ namespace BiasMachine
 				
 				for(int j=0; j<count; ++j)
 				{
-					scores.Add(new KeyValuePair<BiasMachine, double>(population[j], error[j]));				
+					scores.Add(new KeyValuePair<BiasMachine, double>(population[j], error[j]));
 				}
 				
 				scores.Sort((x, y) => x.Value.CompareTo(y.Value));
@@ -203,10 +205,13 @@ namespace BiasMachine
 					if(j < best)
 					{
 						population[j] = successful[j];
-					}					
+					}
 					else
 					{
-						population[j] = successful[FixedRandom.Next(best)].Clone();						
+						int random = FixedRandom.Next(best);
+
+						population[j] = successful[random].Clone();
+						
 						population[j].Mutation();
 					}
 				}
@@ -256,7 +261,7 @@ namespace BiasMachine
 				
 				for(int j=0; j<count; ++j)
 				{
-					scores.Add(new KeyValuePair<BiasMachine, double>(population[j], error[j]));				
+					scores.Add(new KeyValuePair<BiasMachine, double>(population[j], error[j]));
 				}
 				
 				scores.Sort((x, y) => x.Value.CompareTo(y.Value));
@@ -271,13 +276,22 @@ namespace BiasMachine
 					if(j < best)
 					{
 						population[j] = successful[j];
-					}					
+					}
 					else
 					{
 						int parent1 = FixedRandom.Next(best);
 						int parent2 = FixedRandom.Next(best);
 
-						population[j] = successful[parent1].Pairing(successful[parent2]);						
+						//if(best > 1)
+						//{
+						//	while(parent2 == parent1)
+						//	{
+						//		parent2 = FixedRandom.Next(best);
+						//	}
+						//}
+
+						population[j] = successful[parent1].Pairing(successful[parent2]);
+
 						population[j].Mutation();
 					}
 				}
@@ -299,6 +313,8 @@ namespace BiasMachine
 		{
 			StartSelection();
 			StartPairing();
+
+			Console.ReadKey();
 		}
 
 		////////////////////////////////////////////////////////////////////////
