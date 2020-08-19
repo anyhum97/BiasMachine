@@ -12,6 +12,8 @@ namespace BiasMachine
 
 		private static int seed;
 
+		////////////////////////////////////////////////////////////////////////
+
 		public static int Seed
 		{
 			get => seed;

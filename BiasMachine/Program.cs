@@ -14,7 +14,7 @@ namespace BiasMachine
 
 		////////////////////////////////////////////////////////////////////////
 
-		private static BiasMachine Best;
+		private static BiasMachine Best { get; set; }
 		
 		////////////////////////////////////////////////////////////////////////
 
@@ -51,7 +51,7 @@ namespace BiasMachine
 		{
 			const int count = 16;
 
-			double[] average = new double[Output];			
+			double[] average = new double[Output];
 
 			StringBuilder stringBuilder = new StringBuilder();
 			
@@ -62,7 +62,7 @@ namespace BiasMachine
 				double[] input = GetInput();
 				double[] output = GetOutput(input);
 
-				double[] solution = best.Compute(input);					
+				double[] solution = best.Compute(input);
 				
 				stringBuilder.Append("(");
 
