@@ -20,7 +20,7 @@ namespace BiasMachine
 
 		private static BiasMachine GetBiasMachine()
 		{
-			return new BiasMachine(Input, 6, 4, Output);
+			return new BiasMachine(Input, 4, Output);
 		}
 
 		////////////////////////////////////////////////////////////////////////
@@ -302,6 +302,92 @@ namespace BiasMachine
 
 		////////////////////////////////////////////////////////////////////////
 
+		private static BiasMachine Learn(double RequiredError)
+		{
+			const int iteration = 1000;
+			const int steps = 100;
+			const int count = 100;
+			const int best = 10;
+			
+			FixedRandom.Seed = 505;
+
+			BiasMachine[] population = new BiasMachine[count];
+			BiasMachine[] successful = new BiasMachine[best];
+			
+			RequiredError = Math.Abs(RequiredError);
+
+			for(int j=0; j<count; ++j)
+			{
+				population[j] = GetBiasMachine();
+			}
+			
+			for(int i=0; i<iteration; ++i)
+			{
+				List<KeyValuePair<BiasMachine, double>> scores = new List<KeyValuePair<BiasMachine, double>>(count);
+				
+				double[] error = new double[count];
+				
+				for(int u=0; u<steps; ++u)
+				{
+					double[] input = GetInput();
+					double[] result = GetOutput(input);
+					
+					for(int j=0; j<count; ++j)
+					{
+						double[] solution = population[j].Compute(input);
+						
+						for(int z=0; z<Output; ++z)
+						{
+							error[j] += Math.Abs(solution[z]-result[z]);
+						}
+					}
+				}
+				
+				for(int j=0; j<count; ++j)
+				{
+					scores.Add(new KeyValuePair<BiasMachine, double>(population[j], error[j]));
+				}
+				
+				scores.Sort((x, y) => x.Value.CompareTo(y.Value));
+
+				if(i % 20 == 0)
+				{
+					Console.Clear();
+					Console.WriteLine("Itteration: " + (i+1) + " error: " + Float3(scores[0].Value) + "\n\n");
+				}				
+
+				if(Math.Abs(scores[0].Value) <= RequiredError)
+				{
+					return scores[0].Key;
+				}
+
+				for(int j=0; j<best; ++j)
+				{
+					successful[j] = scores[j].Key;
+				}
+				
+				for(int j=0; j<count; ++j)
+				{
+					if(j < best)
+					{
+						population[j] = successful[j];
+					}
+					else
+					{
+						int random = FixedRandom.Next(best);
+
+						population[j] = successful[random].Clone();
+						
+						population[j].Mutation();
+					}
+				}
+			}
+			
+			return successful[0];
+		}
+
+		////////////////////////////////////////////////////////////////////////
+
 		private static string Float3(double value)
 		{
 			return string.Format(CultureInfo.InvariantCulture, "{0:F3}", value);
@@ -311,8 +397,11 @@ namespace BiasMachine
 
 		private static void Main()
 		{
-			StartSelection();
-			StartPairing();
+			//StartSelection();
+			//StartPairing();
+
+			BiasMachine machine = Learn(0.01);
+			Test(machine);
 
 			Console.ReadKey();
 		}

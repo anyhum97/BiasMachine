@@ -269,4 +269,65 @@ namespace BiasMachine
 			
 		}
 	}
+
+	public class Exponential : IActivation
+	{
+		public LimitedParam Factor { get; protected set; }
+
+		public Param Leak { get; protected set; }
+
+		public double DefaultMinValue = 0.5;
+		public double DefaultMaxValue = 2.5;
+		public double DefaultValue = 1.25;
+
+		public Exponential()
+		{
+			Factor = new LimitedParam(DefaultMinValue, DefaultMaxValue, DefaultValue);
+
+			Leak = new Param(0.01);
+		}
+
+		public Exponential(double factor)
+		{
+			Factor = new LimitedParam(DefaultMinValue, DefaultMaxValue, factor);
+
+			Leak = new Param(0.01);
+		}
+
+		public Exponential(double factor, double leak)
+		{
+			Factor = new LimitedParam(DefaultMinValue, DefaultMaxValue, factor);
+
+			Leak = new Param(leak);
+		}
+
+		public Exponential(LimitedParam factor, LimitedParam leak)
+		{
+			Factor = factor.Clone();
+			Leak = leak.Clone();
+		}
+
+		public double Compute(double value)
+		{
+			if(value >= 0.0)
+			{
+				return Math.Pow(value, Factor);
+			}
+			else
+			{
+				return Leak*value;
+			}
+		}
+
+		public IActivation Clone()
+		{
+			return new Exponential(Factor, Leak);
+		}
+
+		public void Mutation()
+		{
+			Factor.Mutation();
+			Leak.Mutation();
+		}
+	}
 }

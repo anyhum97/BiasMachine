@@ -278,7 +278,7 @@ namespace BiasMachine
 
 		IActivation ChangeActivationFunction()
 		{
-			int random = FixedRandom.Next(7);			
+			int random = FixedRandom.Next(8);			
 
 			switch(random)
 			{
@@ -289,6 +289,7 @@ namespace BiasMachine
 				case 4: return new Sinc();
 				case 5: return new Gaussian();
 				case 6: return new Softsign();
+				case 7: return new Exponential();
 			}
 
 			return new LeakyReLU();

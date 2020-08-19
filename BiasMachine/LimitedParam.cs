@@ -85,7 +85,7 @@ namespace BiasMachine
 			}
 		}
 
-		public new object Clone()
+		public new LimitedParam Clone()
 		{
 			LimitedParam param = new LimitedParam(Min, Max, Value, MutationRate, MutationFactor);
 
