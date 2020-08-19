@@ -4,15 +4,23 @@ namespace BiasMachine
 {
 	public class LimitedParam : Param
 	{
+		////////////////////////////////////////////////////////////////////////
 		protected double Min { get; private set; }
+
+		////////////////////////////////////////////////////////////////////////
+
 		protected double Max { get; private set; }
 		
+		////////////////////////////////////////////////////////////////////////
+
 		static LimitedParam()
 		{
 			DefaultMutationRate = 0.100;
 			DefaultMutationFactor = 0.200;
 			DefaultIncreaseFactor = 0.200;
 		}
+
+		////////////////////////////////////////////////////////////////////////
 
 		public LimitedParam(): base()
 		{
@@ -22,6 +30,8 @@ namespace BiasMachine
 			ResetValue();
 		}
 
+		////////////////////////////////////////////////////////////////////////
+
 		public LimitedParam(double min, double max): base()
 		{
 			Min = min;
@@ -29,6 +39,8 @@ namespace BiasMachine
 
 			ResetValue();
 		}
+
+		////////////////////////////////////////////////////////////////////////
 
 		public LimitedParam(double min, double max, double value): base(value)
 		{
@@ -46,6 +58,8 @@ namespace BiasMachine
 			Max = max;
 		}
 
+		////////////////////////////////////////////////////////////////////////
+
 		public LimitedParam(double min, double max, double mutationRate, double mutationFactor): base(mutationRate, mutationFactor)
 		{
 			Min = min;
@@ -53,6 +67,8 @@ namespace BiasMachine
 
 			ResetValue();
 		}
+
+		////////////////////////////////////////////////////////////////////////
 
 		public LimitedParam(double min, double max, double value, double mutationRate, double mutationFactor): base(value, mutationRate, mutationFactor)
 		{
@@ -70,6 +86,8 @@ namespace BiasMachine
 			Max = max;
 		}
 
+		////////////////////////////////////////////////////////////////////////
+
 		public override void SetValue(double value)
 		{
 			Value = value;
@@ -85,6 +103,8 @@ namespace BiasMachine
 			}
 		}
 
+		////////////////////////////////////////////////////////////////////////
+
 		public new LimitedParam Clone()
 		{
 			LimitedParam param = new LimitedParam(Min, Max, Value, MutationRate, MutationFactor);
@@ -95,9 +115,13 @@ namespace BiasMachine
 			return param;
 		}
 
+		////////////////////////////////////////////////////////////////////////
+
 		public new void ResetValue()
 		{
 			Value = FixedRandom.NextDouble(Min, Max);
 		}
+
+		////////////////////////////////////////////////////////////////////////
 	}
 }

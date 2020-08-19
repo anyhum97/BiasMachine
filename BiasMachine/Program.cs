@@ -40,7 +40,7 @@ namespace BiasMachine
 		{
 			double[] output = new double[Output];
 
-			output[0] = input[0]*Math.Sin(input[0]);
+			output[0] = Math.Sin(input[0]);
 
 			return output;
 		}
@@ -308,8 +308,6 @@ namespace BiasMachine
 			const int steps = 100;
 			const int count = 100;
 			const int best = 10;
-			
-			FixedRandom.Seed = 505;
 
 			BiasMachine[] population = new BiasMachine[count];
 			BiasMachine[] successful = new BiasMachine[best];
@@ -354,7 +352,7 @@ namespace BiasMachine
 				{
 					Console.Clear();
 					Console.WriteLine("Itteration: " + (i+1) + " error: " + Float3(scores[0].Value) + "\n\n");
-				}				
+				}
 
 				if(Math.Abs(scores[0].Value) <= RequiredError)
 				{

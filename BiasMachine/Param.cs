@@ -3,14 +3,22 @@ using System.Globalization;
 
 namespace BiasMachine
 {
+	////////////////////////////////////////////////////////////////////////
+	
 	public interface IMutation
 	{
 		void Mutation();
 	}
 
+	////////////////////////////////////////////////////////////////////////
+
 	public class Param : IMutation
 	{
+		////////////////////////////////////////////////////////////////////////
+		
 		public double Value { get; protected set; }
+
+		////////////////////////////////////////////////////////////////////////
 
 		private double mutationRate;
 		public double MutationRate
@@ -35,6 +43,8 @@ namespace BiasMachine
 			}
 		}
 
+		////////////////////////////////////////////////////////////////////////
+
 		private double mutationFactor;
 		public double MutationFactor
 		{
@@ -57,6 +67,8 @@ namespace BiasMachine
 				mutationFactor = value;
 			}
 		}
+
+		////////////////////////////////////////////////////////////////////////
 
 		private double increaseFactor;
 		public double IncreaseFactor
@@ -81,6 +93,8 @@ namespace BiasMachine
 			}
 		}
 
+		////////////////////////////////////////////////////////////////////////
+
 		private static double defaultMutationRate;
 		public static double DefaultMutationRate
 		{
@@ -103,6 +117,8 @@ namespace BiasMachine
 				defaultMutationRate = value;
 			}
 		}
+
+		////////////////////////////////////////////////////////////////////////
 
 		private static double defaultMutationFactor;
 		public static double DefaultMutationFactor
@@ -127,6 +143,8 @@ namespace BiasMachine
 			}
 		}
 		
+		////////////////////////////////////////////////////////////////////////
+
 		private static double defaultIncreaseFactor;
 		public static double DefaultIncreaseFactor
 		{
@@ -150,7 +168,11 @@ namespace BiasMachine
 			}
 		}
 
+		////////////////////////////////////////////////////////////////////////
+
 		protected bool Increase { get; set; }
+
+		////////////////////////////////////////////////////////////////////////
 
 		public const double MinMutationRate = 0.001;
 		public const double MaxMutationRate = 1.000;
@@ -166,12 +188,16 @@ namespace BiasMachine
 
 		public const double Bias = 0.01;
 		
+		////////////////////////////////////////////////////////////////////////
+
 		static Param()
 		{
 			DefaultMutationRate = 0.200;
 			DefaultMutationFactor = 0.200;
 			DefaultIncreaseFactor = 0.200;
 		}
+
+		////////////////////////////////////////////////////////////////////////
 
 		public Param()
 		{
@@ -184,6 +210,8 @@ namespace BiasMachine
 			Increase = FixedRandom.GetBool();
 		}
 
+		////////////////////////////////////////////////////////////////////////
+
 		public Param(double value)
 		{
 			Value = value;
@@ -194,6 +222,8 @@ namespace BiasMachine
 
 			Increase = FixedRandom.GetBool();
 		}
+
+		////////////////////////////////////////////////////////////////////////
 
 		public Param(double mutationRate, double mutationFactor)
 		{
@@ -206,6 +236,8 @@ namespace BiasMachine
 			Increase = FixedRandom.GetBool();
 		}
 
+		////////////////////////////////////////////////////////////////////////
+
 		public Param(double value, double mutationRate, double mutationFactor)
 		{
 			Value = value;
@@ -217,20 +249,28 @@ namespace BiasMachine
 			Increase = FixedRandom.GetBool();
 		}
 
+		////////////////////////////////////////////////////////////////////////
+
 		public static implicit operator double(Param instance)
 		{
 			return instance.Value;
 		}
+
+		////////////////////////////////////////////////////////////////////////
 
 		public override string ToString()
 		{
 			return string.Format(CultureInfo.InvariantCulture, "{0:F3}", Value);
 		}
 
+		////////////////////////////////////////////////////////////////////////
+
 		public virtual void SetValue(double value)
 		{
 			Value = value;
 		}
+
+		////////////////////////////////////////////////////////////////////////
 
 		public virtual void Mutation()
 		{
@@ -263,10 +303,14 @@ namespace BiasMachine
 			}
 		}
 
+		////////////////////////////////////////////////////////////////////////
+
 		public void ResetValue()
 		{
 			Value = FixedRandom.NextDouble(DefaultMinValue, DefaultMaxValue);
 		}
+
+		////////////////////////////////////////////////////////////////////////
 
 		public Param Clone()
 		{
@@ -277,6 +321,8 @@ namespace BiasMachine
 
 			return param;
 		}
+
+		////////////////////////////////////////////////////////////////////////
 	}
 }
 
